@@ -1,19 +1,9 @@
 # Simple Student Information System
-"""
-Fields :- ['ID NUMBER', 'NAME', 'COURSE', 'YEAR', 'GENDER']
-1. Add Student
-2. View Students
-3. Search Student
-4. Update Student
-5. Delete Student
-6. Quit
-"""
 
 import csv
-# Global variables
+
 student_fields = ['ID NUMBER', 'NAME', 'COURSE', 'YEAR LEVEL', 'GENDER']
 student_database = 'students.csv'
-
 
 def menu():
     print("================================")
