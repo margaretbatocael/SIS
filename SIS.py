@@ -110,8 +110,6 @@ def update():
                     updated_data.append(row)
                 counter += 1
 
-
-    # Check if the record is found or not
     if index_student is not None:
         with open(student_database, "w", encoding="utf-8") as f:
             writer = csv.writer(f)
