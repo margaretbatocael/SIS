@@ -2,8 +2,8 @@
 
 import csv
 
-student_fields = ['ID NUMBER', 'NAME', 'COURSE', 'YEAR LEVEL', 'GENDER']
-student_database = 'students.csv'
+fields = ['ID NUMBER', 'NAME OF STUDENT', 'COURSE', 'YEAR LEVEL', 'GENDER']
+data = 'students.csv'
 
 def menu():
     print("================================")
@@ -11,11 +11,11 @@ def menu():
     print(":  STUDENT INFORMATION SYSTEM  :")
     print("================================")
     print("================================")
-    print("1. Add New Student")
-    print("2. Display List of Students")
-    print("3. Search Student")
-    print("4. Edit Student")
-    print("5. Delete a Student")
+    print("1. Add")
+    print("2. Display")
+    print("3. Search")
+    print("4. Update")
+    print("5. Delete")
     print("6. Exit")
 
 
@@ -23,133 +23,123 @@ def create():
     print("--- ADD STUDENT DATA ---")
     print("========================")
 
-    global student_fields
-    global student_database
+    stud_data = []
+    for field in fields:
+        x = input(field + ": ")
+        stud_data.append(x)
 
-    student_data = []
-    for field in student_fields:
-        value = input(field + ": ")
-        student_data.append(value)
+    with open(data, "a") as file:
+        writer = csv.writer(file)
+        writer.writerows([stud_data])
 
-    with open(student_database, "a", encoding="utf-8") as f:
-        writer = csv.writer(f)
-        writer.writerows([student_data])
-
-    print("Data is saved!")
-    input("Press 'Enter' to continue")
+    print("Saved!")
+    input("Press any key to continue")
     return
 
 
 def read():
-    global student_fields
-    global student_database
 
-    print("--- STUDENT RECORDS ---")
-    print("=======================")
-    with open(student_database, "r", encoding="utf-8") as f:
-        reader = csv.reader(f)
-        for x in student_fields:
-            print(x, end='\t |')
+    print("--- LIST OF STUDENTS ---")
+    print("========================")
+    with open(data, "r") as file:
+        reader = csv.reader(file)
+        for field in fields:
+            print(field, end='       ')
         print("\n------------------------------------------------------------------------------")
 
         for row in reader:
             for item in row:
-                print(item, end='\t |')
+                print(item, end='       ')
             print("\n")
 
-    input("Press 'Enter' to continue")
+    input("Press any key to continue")
+    
+    
+def update():
 
-
-def search_student():
-    global student_fields
-    global student_database
-
-    print("--- SEARCH STUDENT ---")
+    print("--- UPDATE STUDENT ---")
     print("======================")
-    roll = input("Enter ID no. to search: ")
-    with open(student_database, "r", encoding="utf-8") as f:
+    number = input("Enter ID no. to update: ")
+    index_stud = None
+    updated_data = []
+    with open(data, "r") as f:
         reader = csv.reader(f)
+        counter = 0
         for row in reader:
             if len(row) > 0:
-                if roll == row[0]:
+                if number == row[0]:
+                    index_stud = counter
+                    print("Student found at index ",index_stud)
+                    stud_data = []
+                    for field in fields:
+                        x = input(field + ": ")
+                        stud_data.append(x)
+                    updated_data.append(stud_data)
+                else:
+                    updated_data.append(row)
+                counter += 1
+
+    if index_stud is not None:
+        with open(data, "w") as file:
+            writer = csv.writer(file)
+            writer.writerows(updated_data)
+    else:
+        print("ID No. not found!")
+
+    input("Press any key to continue")
+    
+    
+def delete():
+
+    print("--- DELETE STUDENT ---")
+    print("======================")
+    number = input("Enter ID no. to delete: ")
+    stud_found = False
+    updated_data = []
+    with open(data, "r") as file:
+        reader = csv.reader(file)
+        counter = 0
+        for row in reader:
+            if len(row) > 0:
+                if number != row[0]:
+                    updated_data.append(row)
+                    counter += 1
+                else:
+                    stud_found = True
+
+    if stud_found is True:
+        with open(data, "w") as file:
+
+            writer = csv.writer(file)
+            writer.writerows(updated_data)
+        print("ID no. ", number, "is deleted!")
+    else:
+        print("ID No. does not exist!")
+
+    input("Press any key to continue.")
+
+
+def search():
+    
+    print("--- SEARCH STUDENT ---")
+    print("======================")
+    number = input("Enter ID no. to search: ")
+    with open(data, "r") as file:
+        reader = csv.reader(file)
+        for row in reader:
+            if len(row) > 0:
+                if number == row[0]:
                     print("----- Student Found! -----")
-                    print("ID NUMBER(YYYY-NNNN: ", row[0])
-                    print("NAME: ", row[1])
+                    print("ID NUMBER ", row[0])
+                    print("NAME OF STUDENT: ", row[1])
                     print("COURSE: ", row[2])
                     print("YEAR LEVEL: ", row[3])
                     print("GENDER: ", row[4])
                     break
         else:
-            print("ID No. not found!")
-    input("Press 'Enter' to continue")
+            print("ID No. does not exist!")
+    input("Press any key to continue")
 
-
-def update():
-    global student_fields
-    global student_database
-
-    print("--- UPDATE STUDENT ---")
-    print("======================")
-    roll = input("Enter ID no. to update: ")
-    index_student = None
-    updated_data = []
-    with open(student_database, "r", encoding="utf-8") as f:
-        reader = csv.reader(f)
-        counter = 0
-        for row in reader:
-            if len(row) > 0:
-                if roll == row[0]:
-                    index_student = counter
-                    print("Student found at index ",index_student)
-                    student_data = []
-                    for field in student_fields:
-                        value = input("Enter " + field + ": ")
-                        student_data.append(value)
-                    updated_data.append(student_data)
-                else:
-                    updated_data.append(row)
-                counter += 1
-
-    if index_student is not None:
-        with open(student_database, "w", encoding="utf-8") as f:
-            writer = csv.writer(f)
-            writer.writerows(updated_data)
-    else:
-        print("ID No. not found!")
-
-    input("Press 'Enter' to continue")
-
-
-def delete():
-    global student_fields
-    global student_database
-
-    print("--- DELETE STUDENT ---")
-    print("======================")
-    roll = input("Enter ID no. to delete: ")
-    student_found = False
-    updated_data = []
-    with open(student_database, "r", encoding="utf-8") as f:
-        reader = csv.reader(f)
-        counter = 0
-        for row in reader:
-            if len(row) > 0:
-                if roll != row[0]:
-                    updated_data.append(row)
-                    counter += 1
-                else:
-                    student_found = True
-
-    if student_found is True:
-        with open(student_database, "w", encoding="utf-8") as f:
-
-            writer = csv.writer(f)
-            writer.writerows(updated_data)
-        print("ID no. ", roll, "is deleted!")
-    else:
-        print("ID No. not found!")
-
-    input("Press 'Enter' to continue.")
 
 while True:
     menu()
@@ -160,7 +150,7 @@ while True:
     elif choice == '2':
         read()
     elif choice == '3':
-        search_student()
+        search()
     elif choice == '4':
         update()
     elif choice == '5':
