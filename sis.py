@@ -83,7 +83,7 @@ class Student:
                     YearLevel=row['Year Level']
                     Course=row['Course']
                     Gender=row['Gender']
-                    tree.insert("",0, values=(IDNumber, LastName, FirstName, MiddleName, Gender, YearLevel, Course))
+                    tree.insert("",, values=(IDNumber, LastName, FirstName, MiddleName, Gender, YearLevel, Course))
                     
         def deleteStd():
             if tree.focus()=="":
